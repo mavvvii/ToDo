@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/vscode/devcontainers/python:3.11
+ARG PYTHON_VERSION=3.11
+
+FROM mcr.microsoft.com/vscode/devcontainers/python:${PYTHON_VERSION}
 
 ENV PYTHONUNBUFFERED 1
 ENV POETRY_VERSION=2.1.3
@@ -6,7 +8,12 @@ ENV POETRY_VERSION=2.1.3
 
 WORKDIR /workspaces/ToDo_App/backend/
 
-RUN apt-get update && apt-get install -y curl libpq-dev ruby-full
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    libpq-dev \
+    ruby-full \
+    git-flow
 
 USER vscode
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
