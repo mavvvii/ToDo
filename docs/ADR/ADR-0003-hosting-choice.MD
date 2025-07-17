@@ -2,8 +2,8 @@
 Status: Proposed
 Date: 2025-07-03
 Deciders: Hubert Kwiatek
-Consulted: 
-Informed: 
+Consulted:
+Informed:
 ---
 
 # ADR 0001: Hosting Platform Decision for Production Deployment
@@ -40,7 +40,7 @@ This decision is based on cost analysis and the overall user experience of the f
 ## Options  - Pros and Cons
 
 1. **AWS**  
-    **Pros:** 
+    **Pros:**
      - Lower cost compared to Azure and Google Cloud Platform  
    - **Neutral:**  
      - Simple interface  

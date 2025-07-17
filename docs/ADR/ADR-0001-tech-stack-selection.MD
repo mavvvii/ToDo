@@ -42,12 +42,12 @@ What technology stack should we choose to build the ToDo Web Application?
 - ORM: SQLAlchemy / Prisma / Django ORM
 
 ### 4. Queues / Messaging
-- Message broker: RabbitMQ / Kafka / Redis 
+- Message broker: RabbitMQ / Kafka / Redis
 - Task Runners: Celery (Python) / BullMQ (Node.js) / Spring Batch
 
 ### 5. DevOps & Deployment
 - Containerization: Docker / Podman
-- Orchestration: Kubernetes / Docker Compose 
+- Orchestration: Kubernetes / Docker Compose
 - CI/CD: GitHub Actions / GitLab CI / Azure DevOps / Jenkins
 
 ### 6. Testing
@@ -78,10 +78,10 @@ This decision was driven by the team’s deep expertise with these technologies.
 
 1. **Frontend: Vue 3 + Tailwind CSS + Vite + TypeScript**  
 
-    **Pros:** 
+    **Pros:**
      - Large ecosystem of Vue plugins
      - Easy integration with component libraries (e.g. Headless UI, Vuetify)
-     - Lightning and fast local development 
+     - Lightning and fast local development
      - Strong typing and autocomplete from TypeScript
 
     **Cons:**
@@ -144,15 +144,14 @@ This ADR should be implemented as soon as we start developing our ToDo Web Appli
 - [Vite](https://vitejs.dev/guide/)
 - [Tailwind CSS](https://tailwindcss.com/docs/installation)  
 - [TypeScript](https://www.typescriptlang.org/docs/)  
-- [Django](https://www.djangoproject.com/) 
+- [Django](https://www.djangoproject.com/)
 - [Django Rest Framework](https://www.django-rest-framework.org/)  
 - [PostgreSQL](https://www.postgresql.org/docs/)  
-- [Celery](https://docs.celeryproject.org/) 
+- [Celery](https://docs.celeryproject.org/)
 - [Redis](https://redis.io/documentation)  
 - [Docker](https://docs.docker.com/get-started/)  
 - [Docker Compose](https://docs.docker.com/compose/)  
 - [GitHub Actions](https://docs.github.com/actions)  
 - [Pytest](https://docs.pytest.org/)  
-- [Jest](https://jestjs.io/docs/getting-started) 
+- [Jest](https://jestjs.io/docs/getting-started)
 - [Vue Testing Library](https://testing-library.com/docs/vue-testing-library/overview/)
-

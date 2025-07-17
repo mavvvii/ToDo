@@ -5,8 +5,10 @@ Django REST Framework + Celery + PostgreSQL + Redis + Poetry
 ---
 
 ## Project Structure
-- `backend/` 
-```bash
+
+- `backend/`
+
+```text
 ├── backend
 │   ├── asgi.py
 │   ├── celery.py
@@ -78,7 +80,6 @@ Django REST Framework + Celery + PostgreSQL + Redis + Poetry
 
 ## Dependency Management
 
-
 Project using Poetry version 2.1.3 for dependency management.
 
 ### Add a new package
@@ -123,9 +124,9 @@ poetry run python manage.py collectstatic --noinput
 In poduction:
 
 ```bash
-poetry run uvicorn backend.asgi:application --host 0.0.0.0 --port 8000 --workers 4
+poetry run uvicorn backend.asgi:application \
+--host 0.0.0.0 --port 8000 --workers 4
 ```
-
 
 In development:
 
@@ -133,14 +134,27 @@ In development:
 poetry run uvicorn backend.asgi:application --host 0.0.0.0 --port 8000 --reload
 ```
 
-## Run Tests 
+## Run Manually Pre-commit Hooks
 
+In the backend directory, run the following command:
+
+```bash
+poetry run pre-commit run --all-files --config ../.pre-commit-config.yml
+```
+
+## Run Tests
 
 ## Useful Resources
 
 - [Django Docs](https://docs.djangoproject.com/en/5.2/)
+
 - [DRF Docs](https://www.django-rest-framework.org/)
-- [Celery Django Docs](https://docs.celeryq.dev/en/latest/django/first-steps-with-django.html)
+
+- [Celery Django Docs](
+    https://docs.celeryq.dev/en/latest/django/first-steps-with-django.html
+    )
 - [Postgresql Dosc](https://www.postgresql.org/docs/)
+
 - [Redis Docs](https://redis.io/docs/latest/)
+
 - [Poetry Docs](https://python-poetry.org/docs/)

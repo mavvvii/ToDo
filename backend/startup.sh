@@ -5,7 +5,7 @@ set -eu pipefail
 echo "[ALERT] Run migrations..."
 poetry run python manage.py makemigrations --noinput
 
-echo "[ALERT] Apply migrations..." 
+echo "[ALERT] Apply migrations..."
 poetry run python manage.py migrate --database=default
 
 echo "[ALERT] Create admin user if none exists..."

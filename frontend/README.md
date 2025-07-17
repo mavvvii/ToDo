@@ -5,6 +5,7 @@ Vue.js + TailwindCSS + TypeScript
 ## Project Structure
 
 - `frontend/`
+
 ```bash
 ├── Dockerfile
 ├── index.html

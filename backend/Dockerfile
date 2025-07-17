@@ -2,10 +2,11 @@ FROM mcr.microsoft.com/vscode/devcontainers/python:3.11
 
 ENV PYTHONUNBUFFERED 1
 ENV POETRY_VERSION=2.1.3
+# ENV POETRY_VIRTUALENVS_CREATE=false
 
 WORKDIR /workspaces/ToDo_App/backend/
 
-RUN apt-get update && apt-get install -y curl libpq-dev
+RUN apt-get update && apt-get install -y curl libpq-dev ruby-full
 
 USER vscode
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
@@ -17,7 +18,7 @@ USER root
 COPY poetry.lock pyproject.toml README.md ./
 
 USER vscode
-RUN poetry install --no-root
+RUN poetry install --with dev --no-root
 
 USER root
 COPY . /workspaces/ToDo_App/backend/

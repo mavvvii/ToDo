@@ -18,7 +18,7 @@ Which backend interface should we choose ASGI or WSGI ?
 ## Decision Drivers
 
 1. Compatibility with the Django framework
-2. Support for asynchronous features in the future 
+2. Support for asynchronous features in the future
 
 ## Considered Options
 
@@ -41,11 +41,11 @@ This decision is driven by the growing popularity of ASGI over WSGI. ASGI provid
 ## Options  - Pros and Cons
 
 1. **WSGI**  
-    **Pros:** 
-     - Included in Django’s default project template. 
+    **Pros:**
+     - Included in Django’s default project template.
     **Cons:**
      - Only handles synchronous HTTP requests.
-     - Migrating from WSGI to ASGI later may incur additional time and cost. 
+     - Migrating from WSGI to ASGI later may incur additional time and cost.
 2. **ASGI**
     **Pros:**
      - Include both synchronous and asynchronous protocols (HTTP, WebSockets, ...)
@@ -61,4 +61,3 @@ This ADR should be implemented as soon as we commence our backend architecture.
 [ASGI DOCS](https://asgi.readthedocs.io/en/latest/)
 
 [WSGI DOCS](https://wsgi.readthedocs.io/en/latest/)
-

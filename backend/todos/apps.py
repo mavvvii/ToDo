@@ -1,6 +1,14 @@
+"""
+Configurations for the Todos application.
+
+This file defines the application configuration for the Todos app.
+"""
+
 from django.apps import AppConfig
 
 
 class TodosConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'todos'
+    """Configuration class for the Todos application."""
+
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "todos"
