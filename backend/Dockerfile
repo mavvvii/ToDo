@@ -33,4 +33,4 @@ COPY . /workspaces/ToDo_App/backend/
 RUN chmod +x startup.sh
 
 USER vscode
-CMD ["sh", "./startup.sh"]
+ENTRYPOINT ["sh", "./startup.sh"]

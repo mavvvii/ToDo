@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:22
+ARG NODE_VERSION=22
+
+FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:${NODE_VERSION}
 
 WORKDIR /workspaces/ToDo_App/frontend/
 
@@ -12,4 +14,6 @@ COPY . /workspaces/ToDo_App/frontend/
 
 EXPOSE 3000
 
-CMD ["sh", "./startup.sh"]
+RUN chmod +x startup.sh
+
+ENTRYPOINT ["sh", "./startup.sh"]
