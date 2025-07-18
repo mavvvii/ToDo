@@ -27,9 +27,6 @@
     "../../docker-compose.yml",
     "../docker-compose.yml"
   ],
-  "mounts": [
-    "source=${localWorkspaceFolder}/backend,target=/workspaces/${localWorkspaceFolderBasename}/backend,type=bind"
-  ],
   "name": "Dev Container for Backend",
   "remoteUser": "vscode",
   "service": "backend",
