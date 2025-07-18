@@ -47,6 +47,7 @@ INSTALLED_APPS: list[str] = [
 ]
 
 MIDDLEWARE: list[str] = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # For serving static files
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
