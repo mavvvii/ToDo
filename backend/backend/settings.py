@@ -41,6 +41,7 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
+    "drf_spectacular",
     "celery",
     "users",
     "todos",
@@ -103,10 +104,11 @@ AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
     },
 ]
 
-REST_FRAMEWORK: dict[str, tuple[str, ...]] = {
+REST_FRAMEWORK: dict[str, tuple[str, ...] | str] = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT: dict[str, timedelta] = {
