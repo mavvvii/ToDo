@@ -25,12 +25,36 @@ from django.urls import (
     include,
     path,
 )
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 api_urls_v1: URLPattern = [
     path("api/", include(("users.urls", "users"), namespace="users")),
 ]
 
+documentation_urls_v1: list[URLPattern] = [
+    path(
+        "api/v1/schema/",
+        SpectacularAPIView.as_view(),
+        name="schema-v1",
+    ),
+    path(
+        "api/v1/schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema-v1"),
+        name="schema-v1-swagger-ui",
+    ),
+    path(
+        "api/v1/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema-v1"),
+        name="schema-v1-redoc",
+    ),
+]
+
 urlpatterns: list[Union[URLPattern, URLResolver]] = [
     *api_urls_v1,
-    path("admin/", admin.site.urls),
+    *documentation_urls_v1,
+    path("admin/", admin.site.urls, name="admin_site"),
 ]

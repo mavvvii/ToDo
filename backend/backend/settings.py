@@ -41,6 +41,7 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
+    "drf_spectacular",
     "celery",
     "users",
     "todos",
