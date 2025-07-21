@@ -1,5 +1,19 @@
 """
-Package include views for the users app.
+User views module.
 
-This module contains the views for the users app, which handle HTTP requests and responses.
+This module defines versioned viewsets for handling operations related to the User model,
+tailored to different API versions.
+
+Exported Classes:
+- UserViewSetV1: A viewset for retrieving user details in API version 1. It allows authenticated
+  users to list all users or fetch a specific user by ID.
+
+Typical usage example:
+    from users.views import UserViewSetV1
 """
+
+from .v1 import UserViewSetV1
+
+__all__ = [
+    "UserViewSetV1",
+]
