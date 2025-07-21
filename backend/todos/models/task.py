@@ -4,7 +4,7 @@ import uuid
 
 from django.db import models
 
-from .boards import Board
+from .board import Board
 
 
 # pylint: disable=too-many-ancestors

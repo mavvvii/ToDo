@@ -16,8 +16,8 @@ Typical usage:
     from todos.models import Board
 """
 
-from .boards import Board
-from .tasks import Task
+from .board import Board
+from .task import Task
 
 __all__ = [
     "Task",
