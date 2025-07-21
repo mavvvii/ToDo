@@ -1,5 +1,19 @@
 """
-Module containing serializers for user data in the ToDo app.
+User serializers module.
 
-Defines how user model instances are converted to and from JSON for API requests and responses.
+This module provides versioned serializers for the User model, used in different API versions.
+
+Exported Classes:
+- UserDetailSerializerV1: Serializer for user details in version 1 of the API.
+
+Typical usage example:
+    from users.serializers import UserDetailSerializerV1
+
+    serializer_class = UserDetailSerializerV1
 """
+
+from .v1 import UserDetailSerializerV1
+
+__all__ = [
+    "UserDetailSerializerV1",
+]
