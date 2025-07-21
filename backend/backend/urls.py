@@ -32,7 +32,7 @@ from drf_spectacular.views import (
 )
 
 api_urls_v1: URLPattern = [
-    path("api/", include(("users.urls", "users"), namespace="users")),
+    path("api/", include(("users.urls", "v1"), namespace="users")),
 ]
 
 documentation_urls_v1: list[URLPattern] = [
