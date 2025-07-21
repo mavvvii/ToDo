@@ -3,7 +3,8 @@ URL configuration for backend project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
+
+Typical usage example:
 Function views
     1. Add an import:  from my_app import views
     2. Add a URL to urlpatterns:  path('', views.home, name='home')
@@ -15,9 +16,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
-from django.urls import path
+from typing import Union
 
-urlpatterns = [
+from django.contrib import admin
+from django.urls import (
+    URLPattern,
+    URLResolver,
+    include,
+    path,
+)
+
+api_urls_v1: URLPattern = [
+    path("api/", include(("users.urls", "users"), namespace="users")),
+]
+
+urlpatterns: list[Union[URLPattern, URLResolver]] = [
+    *api_urls_v1,
     path("admin/", admin.site.urls),
 ]
