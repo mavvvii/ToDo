@@ -1,0 +1,71 @@
+services:
+  backend:
+    container_name: backend_container
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/workspaces/ToDo_App/backend/
+      # - .:/workspaces/ToDo_App
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    container_name: frontend_container
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/workspaces/ToDo_App/frontend/
+      - /workspaces/ToDo_App/frontend/node_modules
+    depends_on:
+     - backend
+     - db
+
+  redis:
+    container_name: redis_container
+    image: redis:alpine
+    ports:
+    - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery:
+    container_name: celery_container
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    command: poetry run celery -A backend worker --loglevel=info
+    volumes:
+      - ./backend:/workspaces/ToDo_App/backend/
+    depends_on:
+      - backend
+      - redis
+
+  db:
+    container_name: db_container
+    image: postgres:16
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
