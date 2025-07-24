@@ -26,8 +26,8 @@ from rest_framework.routers import DefaultRouter
 from users.views import UserViewSetV1
 
 UsersRouterV1: DefaultRouter = DefaultRouter()
-UsersRouterV1.register(r"users", UserViewSetV1, basename="v1")
+UsersRouterV1.register(r"", UserViewSetV1, basename="v1")
 
 urlpatterns: URLResolver = [
-    path("v1/", include(UsersRouterV1.urls), name="users_v1"),
+    path("", include(UsersRouterV1.urls), name="users_v1"),
 ]

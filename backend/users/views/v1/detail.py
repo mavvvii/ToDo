@@ -36,6 +36,10 @@ class UserViewSet(GenericViewSet):
         serializer_class (Type[Serializer]): Serializer used for user details.
         permission_classes (list): List of permission classes required to access the endpoints.
         pagination_class (None): Pagination is disabled for this view.
+    Methods:
+        get_permissions: Returns the list of permission instances required for the current action.
+        list: Returns a list of all users.
+        retrieve: Returns a user by their primary key.
     """
 
     queryset: QuerySet[User] = User.objects.all()
