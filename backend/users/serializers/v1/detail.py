@@ -1,4 +1,4 @@
-"""Serializers for version 1 of the API."""
+"""Serializer for version 1 of the API."""
 
 from typing import Type
 
