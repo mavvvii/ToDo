@@ -33,7 +33,8 @@ from drf_spectacular.views import (
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 api_urls_v1: URLPattern = [
-    path("api/", include(("users.urls", "v1"), namespace="users")),
+    path("api/v1/users/", include(("users.urls", "users"), namespace="users_v1")),
+    path("api/v1/todos/", include(("todos.urls", "todos"), namespace="todos_v1")),
 ]
 
 documentation_urls_v1: list[URLPattern] = [
