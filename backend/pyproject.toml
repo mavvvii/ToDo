@@ -1,5 +1,5 @@
 [project]
-name = "todo"
+name = "backend"
 version = "0.1.0"
 description = ""
 authors = [
@@ -28,6 +28,10 @@ pylint = "^3.3.7"
 pylint-django = "^2.6.1"
 pre-commit = "^4.2.0"
 flake8 = "^7.3.0"
+black = "^25.1.0"
+bandit = "^1.8.6"
+pycodestyle = "^2.14.0"
+pydocstyle = "^6.3.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
