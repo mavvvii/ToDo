@@ -1,0 +1,57 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "batisteo.vscode-django",
+        "ms-toolsai.jupyter",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "njpwerner.autodocstring"
+      ],
+      "settings": {
+        "editor.rulers": [
+          100
+        ],
+        "flake8.args": [
+          "--max-line-length=100"
+        ],
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.banditEnabled": true,
+        "python.linting.blackArgs": [
+          "--line-length=100"
+        ],
+        "python.linting.blackEnabled": true,
+        "python.linting.enabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.linting.mypyEnabled": true,
+        "python.linting.pycodestyleEnabled": true,
+        "python.linting.pydocstyleEnabled": true,
+        "python.linting.pylintArgs": [
+          "--load-plugins=pylint_django",
+          "--django-settings-module=backend.settings",
+          "--max-line-length=100"
+        ],
+        "python.linting.pylintEnabled": true
+      }
+    }
+  },
+  "dockerComposeFile": [
+    "docker-compose.workspace.yml"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest"
+    }
+  },
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+    "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind"
+  ],
+  "name": "ToDo App DevContainer",
+  "postCreateCommand": "poetry install --with dev --no-root --directory backend && docker compose up --build -d",
+  "remoteUser": "vscode",
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+}
