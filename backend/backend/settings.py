@@ -1,21 +1,25 @@
 """Django settings for the backend ToDo application.
 
-This module contains the settings and configurations for the Django application,
+This module contains the settings and configurations for the Django application~,
 including database connections, installed apps, middleware, and other configurations.
 """
 
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY: str | None = os.environ.get("DJANGO_SECRET_KEY")
-DEBUG: bool = os.environ.get("DJANGO_PRODUCTION", "False") == "True"
+
+if "pylint" in sys.argv[0]:
+    SECRET_KEY = "insecure-secret-key-for-pylint-checks"
 
 assert SECRET_KEY, "SECRET_KEY environment variable must be set"
+
+DEBUG: bool = os.environ.get("DJANGO_PRODUCTION", "False") == "True"
 
 ALLOWED_HOSTS: list[str] = ["*"]
 
