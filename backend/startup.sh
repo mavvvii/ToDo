@@ -20,5 +20,5 @@ if [ "$DJANGO_PRODUCTION" = "True" ]; then
 else
   echo "Running developing server"
   # poetry run python manage.py runserver 0.0.0.0:8000
-  poetry run uvicorn backend.asgi:application --host 0.0.0.0 --port "8000" --reload --reload-dir /workspaces/ToDo_App/backend
+  poetry run uvicorn backend.asgi:application --host 0.0.0.0 --port "8000" --reload --reload-dir /app
 fi
