@@ -8,7 +8,8 @@
         "ms-toolsai.jupyter",
         "ms-python.black-formatter",
         "ms-python.flake8",
-        "njpwerner.autodocstring"
+        "njpwerner.autodocstring",
+        "ritwickdey.LiveServer"
       ],
       "settings": {
         "editor.rulers": [
