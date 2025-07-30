@@ -32,11 +32,11 @@ if DEBUG:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-# EMAIL_HOST: str = os.environ.get("DJANGO_EMAIL_HOST", "smtp.gmail.com")
-# EMAIL_PORT: int = int(os.environ.get("DJANGO_EMAIL_PORT", 587))
-# EMAIL_USE_TLS: bool = os.environ.get("DJANGO_EMAIL_USE_TLS", "True") == "True"
-# EMAIL_HOST_USER: str | None = os.environ.get("DJANGO_EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD: str | None = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
+EMAIL_HOST: str = os.environ.get("DJANGO_EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT: int = int(os.environ.get("DJANGO_EMAIL_PORT", 587))
+EMAIL_USE_TLS: bool = os.environ.get("DJANGO_EMAIL_USE_TLS", "True") == "True"
+EMAIL_HOST_USER: str | None = os.environ.get("DJANGO_EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD: str | None = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
 
 CORS_ALLOW_CREDENTIALS: bool = True
 
