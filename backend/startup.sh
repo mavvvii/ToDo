@@ -19,6 +19,5 @@ if [ "$DJANGO_PRODUCTION" = "1" ]; then
   poetry run gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 4 --log-level info
 else
   echo "Running developing server"
-  poetry run python manage.py runserver 0.0.0:8000
-  # poetry run gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --reload --log-level info
+  poetry run gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --reload --log-level info
 fi
