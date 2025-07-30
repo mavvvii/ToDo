@@ -2,7 +2,6 @@
 
 from typing import Type
 
-from django.conf import settings
 from rest_framework import serializers
 from users.models import User
 
@@ -26,7 +25,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta options for UserDetailSerializer."""
 
-        model: Type[User] = settings.AUTH_USER_MODEL
+        model: Type[User] = User
         fields: str = "__all__"
 
         read_only_fields: list[str] = ["id", "username", "email"]
