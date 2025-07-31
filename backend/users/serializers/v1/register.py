@@ -1,5 +1,7 @@
 """Register Serializer for User Registration."""
 
+from typing import Type
+
 from rest_framework import serializers
 from users.models import User
 
@@ -34,7 +36,7 @@ class RegisterSerializer(serializers.Serializer):
         Returns:
             User: The created user instance.
         """
-        user: User = User.objects.create_user(
+        user: Type[User] = User.objects.create_user(
             username=validated_data["username"],
             email=validated_data["email"],
             password=validated_data["password"],
