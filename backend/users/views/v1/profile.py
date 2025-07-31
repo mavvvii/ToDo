@@ -7,7 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.db.models import QuerySet
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, BasePermission
+from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -37,7 +37,7 @@ class UserProfileViewSet(GenericViewSet):
 
     queryset: QuerySet[User] = User.objects.all()
     serializer_class: Type[UserDetailSerializerV1] = UserDetailSerializerV1
-    permission_classes: List[Type[BasePermission]] = [AllowAny]
+    permission_classes: List[Type[BasePermission]] = [IsAuthenticated]
     pagination_class: None = None
 
     def list(self, request: Request, *args, **kwargs) -> Response:
