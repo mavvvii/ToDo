@@ -1,4 +1,4 @@
-"""Serializer for version 1 of the API."""
+"""Detail Serializer for User Information."""
 
 from typing import Type
 
