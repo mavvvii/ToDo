@@ -59,6 +59,7 @@ INSTALLED_APPS: list[str] = [
 
 MIDDLEWARE: list[str] = [
     "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # For serving static files
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -116,9 +117,7 @@ AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
 ]
 
 REST_FRAMEWORK: dict[str, Any] = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("users.authenticate.CustomCookiesAuthentication",),
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
@@ -127,7 +126,9 @@ REST_FRAMEWORK: dict[str, Any] = {
         "anon": "1000/day",
         "user": "10000/day",
     },
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 100,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -138,9 +139,17 @@ REST_FRAMEWORK: dict[str, Any] = {
     ],
 }
 
-SIMPLE_JWT: dict[str, timedelta] = {
+SIMPLE_JWT: dict[str, Any] = {
+    "ACCESS_TOKEN_NAME": "access_token",
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(weeks=1),
+    "REFRESH_TOKEN_NAME": "refresh_token",
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME_REMEMBER_ME": timedelta(days=30),
+    "CSRF_TOKEN_NAME": "csrftoken",
+    "AUTH_COOKIE": "access_token",
+    "AUTH_COOKIE_SECURE": True,
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_SAMESITE": "Lax",
 }
 
 LANGUAGE_CODE: str = "en-us"
