@@ -1,0 +1,131 @@
+body {
+    background: linear-gradient(-45deg, #ee7752, #86bd78, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+
+#shape-1 {
+  border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+  top: -300px;
+  right: 400px;
+  width: 300px;
+  height: 300px;
+  z-index: -10;
+}
+
+#shape-2 {
+  border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+  top: -100px;
+  right: 10px;
+  width: 300px;
+  height: 300px;
+  z-index: -10;
+}
+
+@keyframes gradient-reverse {
+    100% {
+        background-position: 50% 00%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    0% {
+        background-position: 0% 50%;
+    }
+}
+
+#chip {
+  width: 50px;
+}
+
+.fade {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  padding: auto;
+  animation-name: fade-in;
+}
+
+.fade-delay-small {
+  animation-delay: 0.15s;
+}
+
+.fade-delay-medium {
+  animation-delay: 0.3s;
+}
+.fade-delay-big {
+  animation-delay: 0.4s;
+}
+@keyframes slidein {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.6;
+  width: 4px;
+  height: 4px;
+  animation: floatParticle linear infinite;
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50vw);
+    opacity: 0;
+  }
+}
+
+-- about ---
+.project-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+}
+.me-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+}
+
+.project-img {
+    max-height: 200px;
+    object-fit: cover;
+}
