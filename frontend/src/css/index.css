@@ -43,3 +43,21 @@
     opacity: 1;
   }
 }
+
+#content-area {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  width: 100%;
+  max-width: 500px;
+  padding: 1rem;
+}
+
+#content-area::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+}
