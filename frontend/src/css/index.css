@@ -16,14 +16,14 @@
   z-index: -10;
 }
 
-.fade {
+/* .fade {
   animation-duration: 1s;
   animation-fill-mode: both;
   padding: auto;
   animation-name: fade-in;
-}
+} */
 
-.fade-delay-small {
+/* .fade-delay-small {
   animation-delay: 0.15s;
 }
 
@@ -33,16 +33,8 @@
 
 .fade-delay-big {
   animation-delay: 0.4s;
-}
+} */
 
-@keyframes slidein {
-  0% {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 #content-area {
   position: fixed;

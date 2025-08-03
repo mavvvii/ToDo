@@ -4,6 +4,25 @@ body {
     animation: gradient 15s ease infinite;
 }
 
+.fade {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  padding: auto;
+  animation-name: fade-in;
+}
+
+.fade-delay-small {
+  animation-delay: 0.15s;
+}
+
+.fade-delay-medium {
+  animation-delay: 0.3s;
+}
+
+.fade-delay-big {
+  animation-delay: 0.4s;
+}
+
 .particles-container {
   position: absolute;
   top: 0;
