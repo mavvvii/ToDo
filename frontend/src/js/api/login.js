@@ -1,6 +1,6 @@
 const API_V1_BASE_URL = 'http://localhost:8000/api/v1'
 
-export async function login(username, password, remember_me) {
+export async function loginUser(username, password, remember_me) {
     const response = await fetch(`${API_V1_BASE_URL}/auth/login/`, {
         method: 'POST',
         headers: {
@@ -10,24 +10,31 @@ export async function login(username, password, remember_me) {
         body: JSON.stringify({
             username: username,
             password: password,
-            remember_me: remembe_me,
+            remember_me: remember_me,
         }),
 
 
-});
+    });
 
-const result = await response.json();
+    const data = await response.json();
+    
     if (response.ok) {
         const csrfToken = result.data.csrf_token;
 
         if (remember_me) {
             localStorage.setItem('csrf_token', csrfToken);
-        }else {
+        } else {
             sessionStorage.setItem('csrf_token', csrfToken);
         }
 
-        console.log('Login successful');
+
     } else {
-        console.error(result.data);
+        const detail = data.detail  || 'Unknown error';
+        const message = data.message || '';
+        const statusCode = response.status;
+        
+        throw new Error(`[${statusCode}] ${detail}${message ? ` - ${message}` : ''}`);
     }
+
+    return data;
 }
