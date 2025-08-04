@@ -1,12 +1,15 @@
 """Views for version 1 of the API .
 
 Exported Classes:
-- UserViewSetV1: A viewset for retrieving user details in API version 1. It allows authenticated
-  users to list all users or fetch a specific user by ID.
+- UserViewSetV1: A viewset that handles user-related operations in API version 1.
 """
 
-from .detail import UserViewSet as UserViewSetV1
+from .login import LoginView as LoginViewV1
+from .profile import UserProfileViewSet as UserProfileViewSetV1
+from .register import UserRegisterView as UserRegisterViewV1
 
 __all__ = [
-    "UserViewSetV1",
+    "LoginViewV1",
+    "UserProfileViewSetV1",
+    "UserRegisterViewV1",
 ]

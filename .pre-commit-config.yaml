@@ -35,14 +35,11 @@ repos:
     rev: v1.16.1
     hooks:
       - id: mypy
-        language: system
-        args: ["--check-untyped-defs", "--ignore-missing-imports", "--show-error-codes"]
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.3.0
     hooks:
       - id: flake8
-        language: system
         args : ["--show-source", "--max-line-length=100"]
 
   - repo: https://github.com/pycqa/pydocstyle

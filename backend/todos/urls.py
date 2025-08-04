@@ -18,6 +18,6 @@ boards_router = NestedDefaultRouter(ToDosRouterV1, r"boards", lookup="board")
 boards_router.register(r"tasks", TaskViewSetV1, basename="tasks_v1")
 
 urlpatterns = [
-    path("", include(ToDosRouterV1.urls)),
-    path("", include(boards_router.urls)),
+    path("v1/", include(ToDosRouterV1.urls)),
+    path("v1/", include(boards_router.urls)),
 ]

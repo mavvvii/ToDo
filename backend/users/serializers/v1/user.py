@@ -1,4 +1,4 @@
-"""Serializer for version 1 of the API."""
+"""Detail Serializer for User Information."""
 
 from typing import Type
 
@@ -26,14 +26,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
         """Meta options for UserDetailSerializer."""
 
         model: Type[User] = User
-        fields: list[str] = [
-            "id",
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "is_active",
-            "is_staff",
-        ]
+        fields: str = "__all__"
 
         read_only_fields: list[str] = ["id", "username", "email"]

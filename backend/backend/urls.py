@@ -30,11 +30,11 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 api_urls_v1: URLPattern = [
-    path("api/v1/users/", include(("users.urls", "users"), namespace="users_v1")),
-    path("api/v1/todos/", include(("todos.urls", "todos"), namespace="todos_v1")),
+    path("api/", include(("users.urls", "users"), namespace="users_v1")),
+    path("api/", include(("todos.urls", "todos"), namespace="todos_v1")),
 ]
 
 documentation_urls_v1: list[URLPattern] = [
@@ -58,7 +58,6 @@ documentation_urls_v1: list[URLPattern] = [
 urlpatterns: list[Union[URLPattern, URLResolver]] = [
     *api_urls_v1,
     *documentation_urls_v1,
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("admin/", admin.site.urls, name="admin_site"),
 ]

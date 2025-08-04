@@ -1,23 +1,13 @@
-"""
-User viewsets for API version 1.
-
-This module provides versioned viewsets for handling user-related operations
-such as listing all users or retrieving a specific user. Access is restricted
-to authenticated users.
-
-Classes:
-    UserViewSetV1: ViewSet for listing and retrieving users in API v1.
-
-Example:
-    from users.views import UserViewSetV1
-"""
+"""User Profile ViewSet for Version 1 of the API."""
 
 from typing import List, Type
 from uuid import UUID
 
+from django.contrib.auth.tokens import default_token_generator
 from django.db.models import QuerySet
 from rest_framework import status
-from rest_framework.permissions import BasePermission, IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -25,7 +15,7 @@ from users.models import User
 from users.serializers import UserDetailSerializerV1
 
 
-class UserViewSet(GenericViewSet):
+class UserProfileViewSet(GenericViewSet):
     """User ViewSet handling user details for version 1 of the API.
 
     This viewset allows authenticated users to retrieve a list of all users or
@@ -38,27 +28,17 @@ class UserViewSet(GenericViewSet):
         pagination_class (None): Pagination is disabled for this view.
     Methods:
         get_permissions: Returns the list of permission instances required for the current action.
+        get_serializer: Returns the appropriate serializer based on the action.
         list: Returns a list of all users.
         retrieve: Returns a user by their primary key.
+        create: Creates a new user if the provided data is valid.
+        activate: Activates a user account by clicking the link with the token.
     """
 
     queryset: QuerySet[User] = User.objects.all()
     serializer_class: Type[UserDetailSerializerV1] = UserDetailSerializerV1
     permission_classes: List[Type[BasePermission]] = [IsAuthenticated]
     pagination_class: None = None
-
-    def get_permissions(self) -> list[BasePermission]:
-        """Return the list of permission instances required for the current action.
-
-        For the 'list' and 'retrieve' actions, only authenticated users are allowed.
-        For all other actions, the default permission behavior is used.
-
-        Returns:
-            list[BasePermission]: A list of permission instances.
-        """
-        if self.action in ["list", "retrieve"]:
-            return [IsAuthenticated()]
-        return super().get_permissions()
 
     def list(self, request: Request, *args, **kwargs) -> Response:
         """Return a list of all users.
@@ -70,7 +50,8 @@ class UserViewSet(GenericViewSet):
             Response: A Response object containing serialized user data.
         """
         queryset: QuerySet[User] = self.get_queryset()
-        serializer: UserDetailSerializerV1 = UserDetailSerializerV1(queryset, many=True)
+        serializer = self.get_serializer(queryset, many=True)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request: Request, pk: UUID, *args, **kwargs) -> Response:
@@ -89,4 +70,34 @@ class UserViewSet(GenericViewSet):
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = self.get_serializer(queryset)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="activate/(?P<token>[^/.]+)",
+        permission_classes=[AllowAny],
+    )
+    def activate(self, request: Request, pk: UUID, token: str) -> Response:
+        """Activates a user account by clicking the link with the token.
+
+        Args:
+            request (Request): The incoming HTTP request.
+            pk (UUID): The primary key of the user to activate.
+            token (str): The activation token from the URL.
+
+        Returns:
+            Response: A Response object indicating the activation status.
+        """
+        try:
+            user: User = self.get_queryset().get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"detail": "User Does Not Exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return Response({"detail": "Account has been activated."}, status=status.HTTP_200_OK)
+
+        return Response({"detail": "Invalid activation link."}, status=status.HTTP_400_BAD_REQUEST)

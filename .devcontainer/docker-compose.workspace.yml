@@ -1,0 +1,7 @@
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ToDo_Devcontainer
+    command: sleep infinity

@@ -1,36 +1,19 @@
-ARG PYTHON_VERSION=3.11
+ARG PYTHON_VERSION=3.12-slim
 
-FROM mcr.microsoft.com/vscode/devcontainers/python:${PYTHON_VERSION}
+FROM python:${PYTHON_VERSION}
 
-ENV PYTHONUNBUFFERED 1
 ENV POETRY_VERSION=2.1.3
-# ENV POETRY_VIRTUALENVS_CREATE=false
 
-WORKDIR /workspaces/ToDo_App/backend/
+RUN pip install poetry==$POETRY_VERSION
 
-RUN apt-get update && \
-    apt-get install -y \
-    curl \
-    libpq-dev \
-    ruby-full \
-    git-flow
+WORKDIR /app
 
-USER vscode
-RUN curl -sSL https://install.python-poetry.org | python3 - && \
-    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+COPY pyproject.toml poetry.lock README.md /app/
 
-ENV PATH="/home/vscode/.local/bin:$PATH"
+RUN poetry install --no-root
 
-USER root
-COPY poetry.lock pyproject.toml README.md ./
-
-USER vscode
-RUN poetry install --with dev --no-root
-
-USER root
-COPY . /workspaces/ToDo_App/backend/
+COPY . /app/
 
 RUN chmod +x startup.sh
 
-USER vscode
 ENTRYPOINT ["sh", "./startup.sh"]

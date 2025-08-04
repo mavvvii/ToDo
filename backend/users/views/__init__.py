@@ -12,8 +12,6 @@ Typical usage example:
     from users.views import UserViewSetV1
 """
 
-from .v1 import UserViewSetV1
+from .v1 import LoginViewV1, UserProfileViewSetV1, UserRegisterViewV1
 
-__all__ = [
-    "UserViewSetV1",
-]
+__all__: list[str] = ["LoginViewV1", "UserRegisterViewV1", "UserProfileViewSetV1"]

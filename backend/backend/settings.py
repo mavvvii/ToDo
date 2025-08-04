@@ -1,35 +1,44 @@
 """Django settings for the backend ToDo application.
 
-This module contains the settings and configurations for the Django application,
+This module contains the settings and configurations for the Django application~,
 including database connections, installed apps, middleware, and other configurations.
 """
 
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY: str | None = os.environ.get("DJANGO_SECRET_KEY")
-DEBUG: bool = os.environ.get("DJANGO_PRODUCTION", "False") == "True"
+
+if "pylint" in sys.argv[0]:
+    SECRET_KEY = "insecure-secret-key-for-pylint-checks"
 
 assert SECRET_KEY, "SECRET_KEY environment variable must be set"
 
+DEBUG: bool = os.environ.get("DJANGO_PRODUCTION", "False") == "False"
+
 ALLOWED_HOSTS: list[str] = ["*"]
 
-REDIS_HOST: str = os.environ.get("REDIS_HOST", "redis_container")
-REDIS_PORT: str = os.environ.get("REDIS_PORT", "6379")
-REDIS_DB: str = os.environ.get("REDIS_DB", "0")
+CORS_ALLOWED_ORIGINS: list[str] = [
+    "http://localhost:3000",
+]
 
-CELERY_BROKER_URL: str = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-CELERY_RESULT_BACKEND: str = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+EMAIL_HOST: str = os.environ.get("DJANGO_EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT: int = int(os.environ.get("DJANGO_EMAIL_PORT", 587))
+EMAIL_USE_TLS: bool = os.environ.get("DJANGO_EMAIL_USE_TLS", "True") == "True"
+EMAIL_HOST_USER: str | None = os.environ.get("DJANGO_EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD: str | None = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
 
-CELERY_ACCEPT_CONTENT: list[str] = ["application/json"]
-CELERY_TASK_SERIALIZER: str = "json"
-CELERY_RESULT_SERIALIZER: str = "json"
+CORS_ALLOW_CREDENTIALS: bool = True
 
 INSTALLED_APPS: list[str] = [
     "jazzmin",
@@ -42,12 +51,15 @@ INSTALLED_APPS: list[str] = [
     "rest_framework",
     "rest_framework_simplejwt",
     "drf_spectacular",
+    "corsheaders",
     "celery",
     "users",
     "todos",
 ]
 
 MIDDLEWARE: list[str] = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # For serving static files
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -105,9 +117,7 @@ AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
 ]
 
 REST_FRAMEWORK: dict[str, Any] = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("users.authenticate.CustomCookiesAuthentication",),
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
@@ -116,7 +126,9 @@ REST_FRAMEWORK: dict[str, Any] = {
         "anon": "1000/day",
         "user": "10000/day",
     },
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 100,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -127,9 +139,17 @@ REST_FRAMEWORK: dict[str, Any] = {
     ],
 }
 
-SIMPLE_JWT: dict[str, timedelta] = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(weeks=4),
+SIMPLE_JWT: dict[str, Any] = {
+    "ACCESS_TOKEN_NAME": "access_token",
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_NAME": "refresh_token",
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME_REMEMBER_ME": timedelta(days=30),
+    "CSRF_TOKEN_NAME": "csrftoken",
+    "AUTH_COOKIE": "access_token",
+    "AUTH_COOKIE_SECURE": True,
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_SAMESITE": "Lax",
 }
 
 LANGUAGE_CODE: str = "en-us"
