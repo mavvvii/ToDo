@@ -105,14 +105,10 @@ class BoardViewSet(ModelViewSet):
         Returns:
             Response: A Response object containing the created board's data or an error message.
         """
-        if not request.user.is_authenticated:
-            return Response(
-                {"detail": "Authentication credentials were not provided."},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
         serializer: BoardSerializerV1 = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(user_id=request.user)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request: Request, *args, **kwargs) -> Response:

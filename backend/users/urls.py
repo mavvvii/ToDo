@@ -23,11 +23,29 @@ Including another URLconf
 
 from django.urls import URLResolver, include, path
 from rest_framework.routers import DefaultRouter
-from users.views import UserViewSetV1
+from users.views import LoginViewV1, UserProfileViewSetV1, UserRegisterViewV1
 
-UsersRouterV1: DefaultRouter = DefaultRouter()
-UsersRouterV1.register(r"", UserViewSetV1, basename="v1")
+user_profile_router_v1 = DefaultRouter()
+user_profile_router_v1.register(
+    r"profile",
+    UserProfileViewSetV1,
+    basename="user-profile-v1",
+)
+
 
 urlpatterns: URLResolver = [
-    path("", include(UsersRouterV1.urls), name="users_v1"),
+    path(
+        "v1/auth/login/",
+        LoginViewV1.as_view(),
+        name="user-login-v1",
+    ),
+    path(
+        "v1/auth/register/",
+        UserRegisterViewV1.as_view(),
+        name="user-register-v1",
+    ),
+    path(
+        "v1/",
+        include(user_profile_router_v1.urls),
+    ),
 ]
