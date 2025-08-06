@@ -8,7 +8,6 @@ async function checkIfLoggedIn() {
       window.location.href = 'dashboard.html';
     }
   } catch (err) {
-    console.error('Błąd sprawdzania sesji:', err);
     loadView('./forms/login.html');
   }
 }
