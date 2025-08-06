@@ -8,33 +8,31 @@ export async function loginUser(username, password, remember_me) {
         },
         credentials: 'include',
         body: JSON.stringify({
-            username: username,
-            password: password,
-            remember_me: remember_me,
+            username,
+            password,
+            remember_me,
         }),
-
-
     });
 
     const data = await response.json();
     
     if (response.ok) {
-        const csrfToken = result.data.csrf_token;
+        const csrfToken = data.data.csrf_token;
 
         if (remember_me) {
             localStorage.setItem('csrf_token', csrfToken);
         } else {
             sessionStorage.setItem('csrf_token', csrfToken);
         }
+        
+        window.location.href = 'dashboard.html';
 
-
+        return data;
     } else {
-        const detail = data.detail  || 'Unknown error';
+        const detail = data.detail || 'Unknown error';
         const message = data.message || '';
         const statusCode = response.status;
         
         throw new Error(`[${statusCode}] ${detail}${message ? ` - ${message}` : ''}`);
     }
-
-    return data;
 }
