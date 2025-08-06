@@ -15,7 +15,7 @@ export function mountDeleteBoard() {
         const data = await getBoards();
         this.boards = data;
       } catch (err) {
-        this.errorMessage = 'Błąd pobierania boardów: ' + err.message;
+        this.errorMessage = 'Error during fetch boards: ' + err.message;
       }
     },
 
@@ -40,15 +40,15 @@ export function mountDeleteBoard() {
       try {
         this.errorMessage = '';
         if (!this.selectedBoardID) {
-          this.openModal('Błąd', 'Musisz wybrać board!');
+          this.openModal('Error', 'You have to select board!');
           return;
         }
         await deleteBoard(this.selectedBoardID);
-        this.openModal('Sukces', 'Board został usunięty!');
+        this.openModal('Success', 'Board has been created!');
         this.fetchBoards();
         this.selectedBoardID = '';
       } catch (err) {
-        this.openModal('Błąd', 'Nieznany błąd');
+        this.openModal('Error', 'Unknown error');
       }
     },
   };
