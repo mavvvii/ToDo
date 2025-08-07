@@ -26,10 +26,11 @@ class Command(BaseCommand):
             username: str = os.environ.get("DJANGO_ADMIN_USER", "admin")
             email: str = os.environ.get("DJANGO_ADMIN_EMAIL", "admin@example.com")
             password: str = os.environ.get("DJANGO_ADMIN_PASSWORD", "admin")
+            is_active: bool = True
             sys.stdout.write(f"Creating account for {username} \n")
 
             admin = UserModel.objects.create_superuser(
-                username=username, email=email, password=password
+                username=username, email=email, password=password, is_active=is_active
             )
             admin.save()
         else:
