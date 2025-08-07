@@ -41,7 +41,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
         model: Type[Task] = Task
         fields: str = "__all__"
-        read_only_fields: list[str] = ["id", "created_at", "updated_at"]
+        read_only_fields: list[str] = ["id", "created_at", "updated_at", "board"]
 
     def create(self, validated_data: dict) -> Task:
         """Create a new task instance.
