@@ -1,0 +1,71 @@
+<div id="board-detail" v-scope>
+  <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div v-if="board">
+    <h2>{{ board.title }}</h2>
+    <p>{{ board.description || 'Brak opisu' }}</p>
+  </div>
+
+  <hr />
+
+  <h4>Tasks</h4>
+
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <button
+      v-for="status in statuses"
+      :key="status"
+      @click="selectedStatus = status"
+      class="btn btn-sm"
+      :class="selectedStatus === status ? 'btn-primary' : 'btn-outline-secondary'"
+    >
+      {{ status }}
+    </button>
+    <button
+      v-if="selectedStatus"
+      @click="selectedStatus = null"
+      class="btn btn-sm btn-outline-danger"
+    >
+      Clear filtr
+    </button>
+  </div>
+
+  <button class="btn btn-sm btn-success mb-3" @click="loadCreateTaskForm">
+    Add task
+  </button>
+
+  <div v-if="filteredTasks.length === 0" class="text-muted">
+    No tasks detected
+    <span v-if="selectedStatus">o Status "{{ selectedStatus }}"</span>
+  </div>
+
+  <div class="list-group">
+    <div
+      v-for="task in filteredTasks"
+      :key="task.id"
+      class="list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div>
+        <h5 class="mb-1">{{ task.title }}</h5>
+        <p class="mb-1">{{ task.description || 'No description' }}</p>
+        <small>
+          Status: <strong>{{ task.status }}</strong> |
+          Done: <strong>{{ task.completed ? 'Yes' : 'No' }}</strong>
+        </small>
+      </div>
+      <div class="ms-3">
+        <button
+          class="btn btn-sm btn-outline-primary me-1"
+          @click="editTask(task)"
+        >
+          ✏️
+        </button>
+        <button
+          class="btn btn-sm btn-outline-danger"
+          @click="deleteTask(task.id)"
+        >
+          🗑️
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+.project-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+}
+.me-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+}
+
+.project-img {
+    max-height: 200px;
+    object-fit: cover;
+}
