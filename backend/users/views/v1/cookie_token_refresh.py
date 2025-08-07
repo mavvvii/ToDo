@@ -1,6 +1,7 @@
 """Cookie Token Refresh View."""
 
 from django.conf import settings
+from django.middleware.csrf import get_token
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
@@ -53,6 +54,7 @@ class CookieTokenRefreshView(TokenRefreshView):
             return Response({"detail": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
         access_token: str = serializer.validated_data.get("access")
+        csrf_token: str = get_token(request)
 
         response: Response = Response(serializer.validated_data, status=status.HTTP_200_OK)
 
@@ -60,9 +62,18 @@ class CookieTokenRefreshView(TokenRefreshView):
             key=settings.SIMPLE_JWT["ACCESS_TOKEN_NAME"],
             value=access_token,
             secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTPONLY"],
             samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             max_age=int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds()),
+        )
+
+        response.set_cookie(
+            key=settings.SIMPLE_JWT["CSRF_TOKEN_NAME"],
+            value=csrf_token,
+            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+            httponly=settings.SIMPLE_JWT["CSRF_COOKIE_HTTPONLY"],
+            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+            max_age=(int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds())),
         )
 
         return response
