@@ -30,7 +30,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from rest_framework_simplejwt.views import TokenRefreshView
+from users.views import CookieTokenRefreshViewV1
 
 api_urls_v1: URLPattern = [
     path("api/", include(("users.urls", "users"), namespace="users_v1")),
@@ -58,6 +58,6 @@ documentation_urls_v1: list[URLPattern] = [
 urlpatterns: list[Union[URLPattern, URLResolver]] = [
     *api_urls_v1,
     *documentation_urls_v1,
-    path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/v1/token/refresh/", CookieTokenRefreshViewV1.as_view(), name="token_refresh"),
     path("admin/", admin.site.urls, name="admin_site"),
 ]
