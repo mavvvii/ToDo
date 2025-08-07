@@ -36,7 +36,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
         model: Type[Board] = Board
         fields: str = "__all__"
-        read_only_fields: list[str] = ["id", "created_at", "updated_at"]
+        read_only_fields: list[str] = ["id", "created_at", "updated_at", "user_id"]
 
     def create(self, validated_data: dict) -> Board:
         """Create a new board instance.
