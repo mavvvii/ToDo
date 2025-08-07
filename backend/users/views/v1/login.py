@@ -109,7 +109,7 @@ class LoginView(APIView):
                     key=settings.SIMPLE_JWT["ACCESS_TOKEN_NAME"],
                     value=user_tokens["access_token"],
                     secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTPONLY"],
                     samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
                     max_age=int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds()),
                 )
@@ -118,7 +118,7 @@ class LoginView(APIView):
                     key=settings.SIMPLE_JWT["REFRESH_TOKEN_NAME"],
                     value=user_tokens["refresh_token"],
                     secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTPONLY"],
                     samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
                     max_age=(
                         int(
@@ -127,7 +127,7 @@ class LoginView(APIView):
                             ].total_seconds()
                         )
                         if remember_me
-                        else int(settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds())
+                        else None
                     ),
                 )
 
@@ -135,12 +135,12 @@ class LoginView(APIView):
                     key=settings.SIMPLE_JWT["CSRF_TOKEN_NAME"],
                     value=csrf_token,
                     secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                    httponly=False,
+                    httponly=settings.SIMPLE_JWT["CSRF_COOKIE_HTTPONLY"],
                     samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
                     max_age=(
                         int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds())
                         if remember_me
-                        else int(settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds())
+                        else int(settings.SIMPLE_JWT["CSRF_TOKEN_LIFETIME"].total_seconds())
                     ),
                 )
 
