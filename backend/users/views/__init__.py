@@ -12,6 +12,11 @@ Typical usage example:
     from users.views import UserViewSetV1
 """
 
-from .v1 import LoginViewV1, UserProfileViewSetV1, UserRegisterViewV1
+from .v1 import CookieTokenRefreshViewV1, LoginViewV1, UserProfileViewSetV1, UserRegisterViewV1
 
-__all__: list[str] = ["LoginViewV1", "UserRegisterViewV1", "UserProfileViewSetV1"]
+__all__: list[str] = [
+    "LoginViewV1",
+    "UserRegisterViewV1",
+    "UserProfileViewSetV1",
+    "CookieTokenRefreshViewV1",
+]

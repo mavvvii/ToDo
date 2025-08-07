@@ -75,16 +75,17 @@ class LoginView(APIView):
 
     # pylint: disable=R1710
     def post(self, request: Request, *args, **kwargs) -> Response:
-        """Authenticate a user with the provided credentials.
+        """Handle user login.
 
         Args:
             request (Request): The incoming HTTP request containing user credentials.
-            format (str, optional): The format of the request. Defaults to None.
+            *args: Additional positional arguments.
+            **kwargs: Additional keyword arguments.
 
         Returns:
-            Response: A Response object containing the authentication tokens or an error message.
+            Response: A Response object containing the authentication tokens and CSRF token.
         """
-        serializer = self.serializer_class(data=request.data)
+        serializer: LoginSerializerV1 = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         username: str | None = serializer.validated_data.get("username", None)
@@ -108,21 +109,25 @@ class LoginView(APIView):
                     key=settings.SIMPLE_JWT["ACCESS_TOKEN_NAME"],
                     value=user_tokens["access_token"],
                     secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTPONLY"],
                     samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-                    max_age=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+                    max_age=int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds()),
                 )
 
                 response.set_cookie(
                     key=settings.SIMPLE_JWT["REFRESH_TOKEN_NAME"],
                     value=user_tokens["refresh_token"],
                     secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTPONLY"],
                     samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
                     max_age=(
-                        settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME_REMEMBER_ME"]
+                        int(
+                            settings.SIMPLE_JWT[
+                                "REFRESH_TOKEN_LIFETIME_REMEMBER_ME"
+                            ].total_seconds()
+                        )
                         if remember_me
-                        else settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
+                        else None
                     ),
                 )
 
@@ -130,19 +135,21 @@ class LoginView(APIView):
                     key=settings.SIMPLE_JWT["CSRF_TOKEN_NAME"],
                     value=csrf_token,
                     secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                    httponly=False,
+                    httponly=settings.SIMPLE_JWT["CSRF_COOKIE_HTTPONLY"],
                     samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
                     max_age=(
-                        settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
+                        int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds())
                         if remember_me
-                        else settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
+                        else int(settings.SIMPLE_JWT["CSRF_TOKEN_LIFETIME"].total_seconds())
                     ),
                 )
 
-                return Response(
-                    {"detail": "Login successfully", "data": response.data},
-                    status=status.HTTP_200_OK,
-                )
+                response.data = {
+                    "detail": "Login successfully",
+                    "data": response.data,
+                }
+                return response
+
         else:
             response_data: dict[str, str] | None = self._user_validation_alerts(username)
             if response_data is None:

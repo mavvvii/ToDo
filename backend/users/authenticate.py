@@ -13,7 +13,6 @@ class CustomCookiesAuthentication(JWTAuthentication):
     Methods:
         _enforce_csrf: Enforces CSRF validation on the request.
         authenticate: Authenticates the user and enforces CSRF validation.
-
     """
 
     def _enforce_csrf(self, request: Request) -> None:
@@ -25,7 +24,7 @@ class CustomCookiesAuthentication(JWTAuthentication):
         Raises:
             PermissionDenied: If CSRF validation fails.
         """
-        check = CSRFCheck()  # pylint: disable=E1120
+        check = CSRFCheck(get_response=lambda request: None)
         check.process_request(request)
         reason = check.process_view(request, None, (), {})
         if reason:
