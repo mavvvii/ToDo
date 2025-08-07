@@ -21,15 +21,26 @@ assert SECRET_KEY, "SECRET_KEY environment variable must be set"
 
 DEBUG: bool = os.environ.get("DJANGO_PRODUCTION", "False") == "False"
 
-ALLOWED_HOSTS: list[str] = ["*"]
-
-CORS_ALLOWED_ORIGINS: list[str] = [
-    "http://localhost:3000",
-]
+ALLOWED_HOSTS: list[str]
+CORS_ALLOWED_ORIGINS: list[str]
+CSRF_TRUSTED_ORIGINS: list[str]
 
 if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+        "http://localhost:5500",
+    ]
+
+    CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
+
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
+    CORS_ALLOWED_ORIGINS = os.environ.get("DJANGO_CORS_ALLOWED_ORIGINS", "").split(",")
+    CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
+
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST: str = os.environ.get("DJANGO_EMAIL_HOST", "smtp.gmail.com")
@@ -38,7 +49,6 @@ EMAIL_USE_TLS: bool = os.environ.get("DJANGO_EMAIL_USE_TLS", "True") == "True"
 EMAIL_HOST_USER: str | None = os.environ.get("DJANGO_EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD: str | None = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
 
-CORS_ALLOW_CREDENTIALS: bool = True
 
 INSTALLED_APPS: list[str] = [
     "jazzmin",
@@ -52,7 +62,6 @@ INSTALLED_APPS: list[str] = [
     "rest_framework_simplejwt",
     "drf_spectacular",
     "corsheaders",
-    "celery",
     "users",
     "todos",
 ]
@@ -64,11 +73,11 @@ MIDDLEWARE: list[str] = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
 
 ROOT_URLCONF: str = "backend.urls"
 
@@ -143,14 +152,17 @@ SIMPLE_JWT: dict[str, Any] = {
     "ACCESS_TOKEN_NAME": "access_token",
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_NAME": "refresh_token",
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME_REMEMBER_ME": timedelta(days=30),
+    "REFRESH_TOKEN_LIFETIME_REMEMBER_ME": timedelta(days=7),
     "CSRF_TOKEN_NAME": "csrftoken",
+    "CSRF_TOKEN_LIFETIME": timedelta(minutes=5),
+    "CSRF_COOKIE_HTTPONLY": False,
     "AUTH_COOKIE": "access_token",
-    "AUTH_COOKIE_SECURE": True,
-    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_SECURE": not DEBUG,
+    "AUTH_COOKIE_HTTPONLY": True,
     "AUTH_COOKIE_SAMESITE": "Lax",
 }
+
+CORS_ALLOW_CREDENTIALS: bool = True
 
 LANGUAGE_CODE: str = "en-us"
 TIME_ZONE: str = "UTC"
