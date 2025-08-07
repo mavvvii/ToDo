@@ -44,7 +44,7 @@ class Task(models.Model):
 
     id: models.UUIDField = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title: models.CharField = models.CharField(max_length=255, blank=False, null=False)
-    board_id: models.ForeignKey = models.ForeignKey(
+    board: models.ForeignKey = models.ForeignKey(
         Board, on_delete=models.CASCADE, related_name="boards"
     )
     status: models.CharField = models.CharField(
