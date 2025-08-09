@@ -1,7 +1,7 @@
 import { createTask } from '../../api/tasks.js';
 import { createApp } from 'https://unpkg.com/petite-vue?module';
 
-export function mountCreateTask(board_id) {
+export function mountCreateTask(board_id, onTaskCreated) {
   if (!board_id) {
     return;
   }
@@ -17,6 +17,7 @@ export function mountCreateTask(board_id) {
 
     closeModal() {
       this.showModal = false;
+      this.closeCreateView();
     },
 
     openModal(title, message) {
@@ -26,24 +27,35 @@ export function mountCreateTask(board_id) {
     },
 
     closeCreateView() {
-      const container = document.getElementById('content-area');
-      if (container) {
-        container.innerHTML = '';
+      const view = document.getElementById('task-create');
+      if (view) {
+        view.classList.add('fade-out');
+        view.addEventListener('animationend', () => {
+          view.innerHTML = '';
+        }, { once: true });
       }
     },
 
-    async save() {
+    async taskCreate() {
       try {
         this.errorMessage = '';
+
         if (!this.title.trim()) {
           this.errorMessage = 'Title is required';
           return;
         }
 
-        await createTask(board_id, this.title, this.description);
+        const response = await createTask(board_id, this.title, this.description);
+
         this.openModal('Success', `Task "${this.title}" has been created!`);
+
+        if (typeof onTaskCreated === 'function') {
+          onTaskCreated(response);
+        }
+
         this.title = '';
         this.description = '';
+
       } catch (err) {
         this.openModal('Error', err.message || 'Unknown error');
       }
