@@ -92,7 +92,7 @@ export async function updateBoard(board_id, title, description, isRetry = false)
         ),
     });
 
-    if (response.status == 401) {
+    if (response.status == 401 && !isRetry) {
       await refreshToken();
       await updateBoard(board_id, title, description);
     }
