@@ -1,12 +1,18 @@
 html, body {
-  height: 100%;
+  min-height: 100vh;          /* minimalna wysokość */
   margin: 0;
   padding: 0;
+
   background: linear-gradient(-45deg, #ee7752, #86bd78, #23a6d5, #23d5ab);
   background-size: 400% 400%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
   animation: gradient 15s ease infinite;
 }
-
+body {
+  overflow-x: hidden;
+}
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
@@ -40,16 +46,15 @@ html, body {
 }
 
 .particles-container {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
   pointer-events: none;
   overflow: hidden;
 }
-
 .particle {
   position: absolute;
   background: white;
