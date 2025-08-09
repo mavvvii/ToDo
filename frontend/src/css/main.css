@@ -1,8 +1,7 @@
 html, body {
-  min-height: 100vh;          /* minimalna wysokość */
+  min-height: 100vh;
   margin: 0;
   padding: 0;
-
   background: linear-gradient(-45deg, #ee7752, #86bd78, #23a6d5, #23d5ab);
   background-size: 400% 400%;
   background-repeat: no-repeat;
@@ -10,9 +9,11 @@ html, body {
 
   animation: gradient 15s ease infinite;
 }
+
 body {
   overflow-x: hidden;
 }
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
@@ -24,7 +25,6 @@ body {
     background-position: 0% 50%;
   }
 }
-
 
 .fade {
   animation-duration: 1s;
@@ -55,6 +55,7 @@ body {
   pointer-events: none;
   overflow: hidden;
 }
+
 .particle {
   position: absolute;
   background: white;
