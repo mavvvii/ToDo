@@ -36,7 +36,7 @@ export function mountCreateTask(board_id, onTaskCreated) {
       }
     },
 
-    async taskCreate() {
+    async createTaskAction() {
       try {
         this.errorMessage = '';
 
