@@ -4,13 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JustDo - Dashboard</title>
-
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+
+  <!-- Bootstrap Icons-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
   <!-- MDB UI Kit -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.css" rel="stylesheet" />
@@ -20,67 +22,54 @@
 
   <!-- Custom CSS -->
   <link href="css/main.css" rel="stylesheet" />
+  <link href="css/dashboard.css" rel="stylesheet" />
+  <link href="css/form.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="animation-delay fade">
+  <div class="animation-delay fade">
     <div id="particles-placeholder"></div>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
-    <a class="navbar-brand me-3" href="#">JustDo</a>
-    <div class="d-flex align-items-center overflow-auto" id="board-nav" style="white-space: nowrap;"></div>
-    <div class="ms-auto d-flex gap-2">
-      <button class="btn btn-outline-success btn-sm" onclick="loadView('./forms/boards/create.html')">+</button>
-      <button class="btn btn-outline-primary btn-sm" onclick="loadView('./forms/boards/update.html')">✏️</button>
-      <button id="deleteBtn" class="btn btn-outline-danger btn-sm" onclick="loadView('./forms/boards/delete.html')">🗑️</button>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+      <a class="navbar-brand me-3" href="#">JustDo</a>
+      <div class="d-flex align-items-center overflow-auto" id="board-nav" style="white-space: nowrap;"></div>
+      <div class="ms-auto d-flex gap-2">
+        <button
+          class="btn btn-outline-success btn-sm"
+          onclick="loadView('./forms/boards/create.html')"
+          title="Create Board"
+        >
+          +
+        </button>
+        <button
+          class="btn btn-outline-primary btn-sm"
+          onclick="loadView('./forms/boards/update.html')"
+          title="Update Board"
+        >
+          ✏️
+        </button>
+        <button
+          id="deleteBtn"
+          class="btn btn-outline-danger btn-sm"
+          onclick="loadView('./forms/boards/delete.html')"
+          title="Delete Board"
+        >
+          🗑️
+        </button>
+        <button
+          class="btn btn-outline-danger btn-sm bi-box-arrow-right"
+          onclick="logout()"
+          title="Logout"
+        >
+        </button>
+      </div>
+    </nav>
 
-  <div id="content-area" class="container my-4"></div>
-</div>
-  <!-- Scripts -->
+    <div id="content-area" class="container my-4"></div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.js"></script>
   <script src="js/scripts/particles-loader.js"></script>
-  
-  <script type="module">
-    import { loadBoardsToNavbar } from './js/views/boards/list.js';
-
-    async function loadView(url) {
-      const container = document.getElementById('content-area');
-
-      try {
-        const response = await fetch(url);
-        const html = await response.text();
-        container.innerHTML = html;
-
-        requestAnimationFrame(async () => {
-          if (url.includes('create.html')) {
-            const { mountCreateBoard } = await import('./js/views/boards/create.js');
-            mountCreateBoard();
-          } else if (url.includes('list.html')) {
-            const { mountBoardList } = await import('./js/views/boards/list.js');
-            mountBoardList();
-          } else if (url.includes('detail.html')) {
-            const { mountBoardDetail } = await import('./js/views/boards/detail.js');
-            mountBoardDetail();
-          } else if (url.includes('update.html')) {
-            const { mountUpdateBoard } = await import('./js/views/boards/update.js');
-            mountUpdateBoard();
-          } else if (url.includes('delete.html')) {
-            const { mountDeleteBoard } = await import('./js/views/boards/delete.js');
-            mountDeleteBoard();
-          }
-        });
-      } catch (err) {
-        container.innerHTML = `<div class="alert alert-danger">Error during loading view: ${err.message}</div>`;
-      }
-    }
-
-    window.loadView = loadView;
-
-    window.addEventListener('DOMContentLoaded', () => {
-      loadBoardsToNavbar();
-    });
-
-  </script>
+  <script src="js/scripts/format-date.js"></script>
+  <script type="module" src="js/scripts/load-view-handler.js"></script>
 </body>
 </html>
