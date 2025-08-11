@@ -1,5 +1,6 @@
 import { createApp } from 'https://unpkg.com/petite-vue?module';
 import { getBoards, updateBoard } from '../../api/boards.js';
+import { loadBoardsToNavbar } from './list.js';
 
 export function mountUpdateBoard() {
   const app = {
@@ -39,9 +40,12 @@ export function mountUpdateBoard() {
     },
 
     closeUpdateView() {
-      const container = document.getElementById('content-area');
-      if (container) {
-        container.innerHTML = '';
+      const view = document.getElementById('board-update');
+      if (view) {
+        view.classList.add('fade-out');
+        view.addEventListener('animationend', () => {
+          view.innerHTML = '';
+        }, { once: true });
       }
     },
 
@@ -53,17 +57,28 @@ export function mountUpdateBoard() {
 
     closeModal() {
       this.showModal = false;
+      this.closeUpdateView();
+
     },
 
-    async update() {
+    async updateBoardAction() {
       try {
         this.errorMessage = '';
+
         if (!this.selectedBoardID) {
           this.openModal('Error', 'You have to select board!');
           return;
         }
+
         await updateBoard(this.selectedBoardID, this.title, this.description);
+
         this.openModal('Success', 'Board has been updated!');
+
+        await loadBoardsToNavbar();
+
+        this.title = '';
+        this.description = '';
+        this.selectedBoardID = '';
       } catch (err) {
         this.openModal('Error', 'Unknown error');
       }

@@ -1,18 +1,11 @@
 import { refreshToken } from './refresh-token.js';
+import { getCsrfToken } from '../scripts/get-csrf-token.js';
+import { API_V1_BASE_URL } from './api.js';
 
-const API_V1_BASE_URL = 'http://localhost:8000/api/v1'
+const csrfToken = getCsrfToken();
 
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-}
-
-const csrfToken = getCookie('csrftoken');
-
-export async function getBoards() {
-    let response = await fetch(`${API_V1_BASE_URL}/boards/`, {
+export async function getBoards(isRetry = false) {
+    const response = await fetch(`${API_V1_BASE_URL}/boards/`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -20,15 +13,20 @@ export async function getBoards() {
         credentials: 'include',
     });
 
-    if (response.status == 401) {
+    if (response.status == 401 && !isRetry) {
         await refreshToken();
-        await getBoards();
+        await getBoards(true);
     }
+
+    if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Error during get boards!');
+  }
 
   return await response.json();
 }
 
-export async function getBoard(board_id) {
+export async function getBoard(board_id, isRetry = false) {
   const response = await fetch(`${API_V1_BASE_URL}/boards/${board_id}`, {
     method: 'GET',
     headers: {
@@ -37,20 +35,20 @@ export async function getBoard(board_id) {
     credentials: 'include',
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 && !isRetry) {
     await refreshToken();
-    return await getBoard(board_id);
+    return await getBoard(board_id, true);
   }
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.detail || 'Error during get boards!');
+    throw new Error(errorData.detail || 'Error during get board!');
   }
 
   return await response.json();
 }
 
-export async function createBoard(title, description) {
+export async function createBoard(title, description, isRetry = false) {
   const response = await fetch(`${API_V1_BASE_URL}/boards/`, {
     method: 'POST',
     headers: {
@@ -64,6 +62,11 @@ export async function createBoard(title, description) {
     }),
   });
 
+  if (response.status == 401 && !isRetry) {
+    await refreshToken();
+    await createBoard(title, description, true);
+  }
+
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.detail || 'Error during create board!');
@@ -72,7 +75,7 @@ export async function createBoard(title, description) {
   return await response.json();
 }
 
-export async function updateBoard(board_id, title, description) {
+export async function updateBoard(board_id, title, description, isRetry = false) {
     const data = {};
     if (title && title.trim() !== '') data.title = title;
     if (description && description.trim() !== '') data.description = description;
@@ -89,15 +92,20 @@ export async function updateBoard(board_id, title, description) {
         ),
     });
 
+    if (response.status == 401 && !isRetry) {
+      await refreshToken();
+      await updateBoard(board_id, title, description);
+    }
+
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Error during update board!');
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Error during update board!');
     }
 
     return await response.json();
 }
 
-export async function deleteBoard(board_id) {
+export async function deleteBoard(board_id, isRetry = false) {
     const response = await fetch(`${API_V1_BASE_URL}/boards/${board_id}/`, {
         method: 'DELETE',
         headers: {
@@ -107,10 +115,19 @@ export async function deleteBoard(board_id) {
         credentials: 'include',
     });
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Error during delete board!');
+    if (response.status == 401 && !isRetry) {
+      await refreshToken();
+      await deleteBoard(board_id, true);
     }
 
-    return true;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Error during delete board!');
+    }
+
+    if (response.status === 204) {
+        return;
+    }
+
+    return await response.json();
 }

@@ -1,4 +1,4 @@
-const API_V1_BASE_URL = 'http://localhost:8000/api/v1'
+import { API_V1_BASE_URL } from './api.js';
 
 export async function refreshToken() {
     try {
@@ -10,12 +10,13 @@ export async function refreshToken() {
             credentials: 'include',
             body: JSON.stringify({})
         });
+
         if (!response.ok) {
-            const text = await response.text();
             throw new Error('Token refresh failed');
         }
-        const data = await response.json();
-        return data;
+
+        return await response.json();
+
     } catch (error) {
         throw error;
     }

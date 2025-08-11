@@ -1,42 +1,63 @@
-import { getTask, updateTask } from '../../api/tasks.js';
+import { createApp } from 'https://unpkg.com/petite-vue?module';
+import { updateTask } from '../../api/tasks.js';
 
-export function mountUpdateTask() {
-  const params = new URLSearchParams(window.location.search);
-  const board_id = params.get('board_id');
-  const task_id = params.get('task_id');
-
-  const titleInput = document.getElementById('title');
-  const descInput = document.getElementById('description');
-  const statusInput = document.getElementById('status');
-  const completedInput = document.getElementById('completed');
-
-  async function populateForm() {
-    const task = await getTask(board_id, task_id);
-    titleInput.value = task.title;
-    descInput.value = task.description || '';
-    statusInput.value = task.status || '';
-    completedInput.checked = task.completed;
+export function mountUpdateTask(boardId, task, onUpdateCallback) {
+  if (!boardId || !task) {
+    return;
   }
 
-  populateForm();
+  const app = {
+    title: task.title || '',
+    description: task.description || '',
+    errorMessage: '',
+    showModal: false,
+    modalTitle: '',
+    modalMessage: '',
 
-  const form = document.getElementById('task-form');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    openModal(title, message) {
+      this.modalTitle = title;
+      this.modalMessage = message;
+      this.showModal = true;
+    },
 
-    try {
-      await updateTask(
-        board_id,
-        task_id,
-        titleInput.value,
-        descInput.value,
-        statusInput.value,
-        completedInput.checked
-      );
-      alert('Task has beed updated!');
-      window.loadView(`./forms/boards/detail.html?id=${board_id}`);
-    } catch (err) {
-      alert('Error during update: ' + err.message);
-    }
-  });
+    closeModal() {
+      this.showModal = false;
+      this.title = '';
+      this.description = '';
+
+      this.closeUpdateView();
+    },
+
+    async taskUpdateAction() {
+      try {
+        this.errorMessage = '';
+
+        if (!this.title.trim()) {
+          this.errorMessage = 'Title cannot be empty';
+          return;
+        }
+
+        await updateTask(boardId, task.id, this.title, this.description);
+
+        this.openModal('Success', `Task ${task.title} has been updated!`);
+
+        if (onUpdateCallback) onUpdateCallback(task.id, this.title, this.description);
+      } catch (err) {
+        this.openModal('Error', 'Failed to update task: ' + err.message);
+      }
+    },
+
+    closeUpdateView() {
+      const view = document.getElementById('task-update');
+      if (view) {
+        view.classList.add('fade-out');
+        view.addEventListener('animationend', () => {
+          view.innerHTML = '';
+        }, { once: true });
+      }
+    },
+  };
+
+  const vueApp = createApp(app);
+  vueApp.mount('#task-update');
 }

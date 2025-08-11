@@ -1,4 +1,4 @@
-const API_V1_BASE_URL = 'http://localhost:8000/api/v1'
+import { API_V1_BASE_URL } from './api.js';
 
 export async function registerUser(username, email, password) {
     const response = await fetch(`${API_V1_BASE_URL}/auth/register/`, {

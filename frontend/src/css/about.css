@@ -1,15 +1,26 @@
-.project-card {
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
-}
-.me-card {
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+.return-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.project-img {
-    max-height: 200px;
-    object-fit: cover;
+.center-card {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.project-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
 }

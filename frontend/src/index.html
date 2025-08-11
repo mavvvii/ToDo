@@ -21,6 +21,7 @@
   <!-- Custom CSS -->
   <link href="css/main.css" rel="stylesheet" />
   <link href="css/index.css" rel="stylesheet" />
+  <link href="css/form.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -56,7 +57,7 @@
         <div id="shape-2" class="position-absolute shadow fade fade-delay-small"></div>
 
       </div>
-      
+
     </div>
   </div>
 
@@ -65,39 +66,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.js"></script>
   <script src="js/scripts/particles-loader.js"></script>
   <script src="js/scripts/check-login.js"></script>
+  <script type="module" src="js/scripts/load-view-handler.js"></script>
   <script>
     checkIfLoggedIn();
   </script>
-
-  <script type="module">
-    async function loadView(url) {
-      const container = document.getElementById('content-area');
-
-      try {
-        const response = await fetch(url);
-        const html = await response.text();
-        container.innerHTML = html;
-
-        requestAnimationFrame(async () => {
-          if (url.includes('register.html')) {
-            const { mountRegisterView } = await import('./js/views/register.js');
-            mountRegisterView();
-          }
-
-          if (url.includes('login.html')) {
-            const { mountLoginView } = await import('./js/views/login.js');
-            mountLoginView();
-          }
-        });
-
-      } catch (err) {
-        container.innerHTML = `<div class="alert alert-danger">Error during load view: ${err.message}</div>`;
-      }
-    }
-
-    window.loadView = loadView;
-
-  </script>
-
 </body>
 </html>

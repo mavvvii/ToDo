@@ -22,9 +22,12 @@ export function mountLoginView() {
     },
 
     closeLoginView() {
-      const container = document.getElementById('content-area');
-      if (container) {
-        container.innerHTML = '';
+      const view = document.getElementById('login-app');
+      if (view) {
+        view.innerHTML = '';
+        view.addEventListener('animationend', () => {
+          view.innerHTML = '';
+        }, { once: true });
       }
     },
 
