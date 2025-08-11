@@ -1,6 +1,8 @@
+import { API_V1_BASE_URL } from '../api/api.js';
+
 async function checkIfLoggedIn() {
   try {
-    const response = await fetch('http://localhost:8000/api/v1/profile/', {
+    const response = await fetch(`${API_V1_BASE_URL}/users/profile/`, {
       credentials: 'include',
     });
 
