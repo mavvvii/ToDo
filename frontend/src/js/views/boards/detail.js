@@ -1,6 +1,6 @@
 import { createApp } from 'https://unpkg.com/petite-vue?module';
 import { getBoard } from '../../api/boards.js';
-import { getTasks, deleteTask } from '../../api/tasks.js';
+import { getTasks, deleteTask, updateTask } from '../../api/tasks.js';
 
 export function mountBoardDetail() {
   const app = {
@@ -10,9 +10,31 @@ export function mountBoardDetail() {
     statuses: ['todo', 'in progress', 'done'],
     selectedStatus: null,
 
+    sortKey: 'created_at',
+    sortOrder: 'desc',
+
     get filteredTasks() {
-      if (!this.selectedStatus) return this.tasks;
-      return this.tasks.filter(t => t.status === this.selectedStatus);
+      let result = this.tasks;
+
+      if (this.selectedStatus) {
+        result = result.filter(t => t.status === this.selectedStatus);
+      }
+
+      return result.slice().sort((a, b) => {
+        const dateA = a[this.sortKey] ? new Date(a[this.sortKey]) : null;
+        const dateB = b[this.sortKey] ? new Date(b[this.sortKey]) : null;
+
+        if (!dateA && !dateB) return 0;
+        if (!dateA) return this.sortOrder === 'asc' ? -1 : 1;
+        if (!dateB) return this.sortOrder === 'asc' ? 1 : -1;
+
+        return this.sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+    },
+
+    setSort(key, order) {
+      this.sortKey = key;
+      this.sortOrder = order;
     },
 
     async fetchData() {
@@ -36,30 +58,44 @@ export function mountBoardDetail() {
       }
     },
 
-    async deleteTask(taskId) {
-      if (!confirm('Are you sure you want to delete the task?')) return;
+    async updateTaskStatus(taskId, status) {
       try {
-        await deleteTask(this.board.id, taskId);
-        this.tasks = await getTasks(this.board.id);
+        const task = this.tasks.find(t => t.id === taskId);
+
+        if (!task) throw new Error('Task not found');
+
+        await updateTask(this.board.id, taskId, null, null, status, null);
+        await this.fetchData();
+
       } catch (err) {
-        console.error('Error during delete task:', err);
+        console.error('Error during update task status:', err);
       }
+
     },
 
     async loadCreateTaskForm() {
       await window.loadView(`./forms/tasks/create.html`);
       const { mountCreateTask } = await import('../tasks/create.js');
-      mountCreateTask(this.board.id);
+
+      mountCreateTask(this.board.id, (newTask) => {
+        this.tasks.push(newTask);
+      });
     },
 
-    editTask(task) {
-      window.loadView(
-        `./forms/tasks/update.html?board_id=${this.board.id}&task_id=${task.id}`
-      );
-    }
+    async loadUpdateTaskForm(taskId) {
+      const task = this.tasks.find(t => t.id === taskId);
+
+      await window.loadView(`./forms/tasks/update.html`);
+      const { mountUpdateTask } = await import('../tasks/update.js');
+
+      mountUpdateTask(this.board.id, task, async (updatedTask) => {
+        await this.fetchData();
+      });
+    },
   };
 
   const vueApp = createApp(app);
   vueApp.mount('#board-detail');
+
   app.fetchData();
 }
