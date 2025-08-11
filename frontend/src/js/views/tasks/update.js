@@ -1,7 +1,11 @@
 import { createApp } from 'https://unpkg.com/petite-vue?module';
-import { updateTask, getTask } from '../../api/tasks.js';
+import { updateTask } from '../../api/tasks.js';
 
 export function mountUpdateTask(boardId, task, onUpdateCallback) {
+  if (!boardId || !task) {
+    return;
+  }
+
   const app = {
     title: task.title || '',
     description: task.description || '',
