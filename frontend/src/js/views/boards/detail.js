@@ -1,6 +1,6 @@
 import { createApp } from 'https://unpkg.com/petite-vue?module';
 import { getBoard } from '../../api/boards.js';
-import { getTasks, deleteTask, updateTask } from '../../api/tasks.js';
+import { getTasks, updateTask } from '../../api/tasks.js';
 
 export function mountBoardDetail() {
   const app = {
@@ -90,6 +90,21 @@ export function mountBoardDetail() {
 
       mountUpdateTask(this.board.id, task, async (updatedTask) => {
         await this.fetchData();
+      });
+    },
+
+    async loadDeleteTaskForm(taskId) {
+      const task = this.tasks.find(t => t.id === taskId);
+      if (!task) {
+        console.error('Task not found for deletion:', taskId);
+        return;
+      }
+
+      await window.loadView(`./forms/tasks/delete.html`);
+      const { mountDeleteTask } = await import('../tasks/delete.js');
+
+      mountDeleteTask(this.board.id, task.id, task.title, (deletedTaskId) => {
+        this.tasks = this.tasks.filter(t => t.id !== deletedTaskId);
       });
     },
   };
