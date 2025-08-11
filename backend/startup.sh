@@ -14,7 +14,7 @@ poetry run python manage.py createadmin
 echo "[ALERT] Collect static files..."
 poetry run python manage.py collectstatic --noinput
 
-if [ "$DJANGO_PRODUCTION" = "1" ]; then
+if [ "$DJANGO_PRODUCTION" = "True" ]; then
   echo "Running production server"
   poetry run gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 4 --log-level info
 else
