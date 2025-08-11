@@ -1,7 +1,7 @@
 import { refreshToken } from './refresh-token.js';
 import { getCsrfToken } from '../scripts/get-csrf-token.js';
+import { API_V1_BASE_URL } from './api.js';
 
-const API_V1_BASE_URL = 'http://localhost:8000/api/v1'
 const csrfToken = getCsrfToken();
 
 export async function getTasks(board_id, isRetry = false) {
