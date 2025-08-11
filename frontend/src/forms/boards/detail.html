@@ -1,71 +1,155 @@
-<div id="board-detail" v-scope>
-  <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
-  <div v-if="board">
-    <h2>{{ board.title }}</h2>
-    <p>{{ board.description || 'Brak opisu' }}</p>
-  </div>
+<div id="board-detail">
+  <div class="border rounded p-4">
 
-  <hr />
+    <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
-  <h4>Tasks</h4>
-
-  <div class="d-flex align-items-center gap-2 mb-3">
-    <button
-      v-for="status in statuses"
-      :key="status"
-      @click="selectedStatus = status"
-      class="btn btn-sm"
-      :class="selectedStatus === status ? 'btn-primary' : 'btn-outline-secondary'"
-    >
-      {{ status }}
-    </button>
-    <button
-      v-if="selectedStatus"
-      @click="selectedStatus = null"
-      class="btn btn-sm btn-outline-danger"
-    >
-      Clear filtr
-    </button>
-  </div>
-
-  <button class="btn btn-sm btn-success mb-3" @click="loadCreateTaskForm">
-    Add task
-  </button>
-
-  <div v-if="filteredTasks.length === 0" class="text-muted">
-    No tasks detected
-    <span v-if="selectedStatus">o Status "{{ selectedStatus }}"</span>
-  </div>
-
-  <div class="list-group">
-    <div
-      v-for="task in filteredTasks"
-      :key="task.id"
-      class="list-group-item d-flex justify-content-between align-items-start"
-    >
-      <div>
-        <h5 class="mb-1">{{ task.title }}</h5>
-        <p class="mb-1">{{ task.description || 'No description' }}</p>
-        <small>
-          Status: <strong>{{ task.status }}</strong> |
-          Done: <strong>{{ task.completed ? 'Yes' : 'No' }}</strong>
-        </small>
-      </div>
-      <div class="ms-3">
-        <button
-          class="btn btn-sm btn-outline-primary me-1"
-          @click="editTask(task)"
-        >
-          ✏️
-        </button>
-        <button
-          class="btn btn-sm btn-outline-danger"
-          @click="deleteTask(task.id)"
-        >
-          🗑️
-        </button>
+    <div class="list-group mb-3">
+      <div v-if="board" class="list-group-item text-center">
+        <h2>{{ board.title }}</h2>
+        <p>{{ board.description || 'No description' }}</p>
       </div>
     </div>
+
+    <hr />
+
+    <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+      <button
+        v-for="status in statuses"
+        :key="status"
+        @click="selectedStatus = status"
+        class="btn btn-sm"
+        :class="selectedStatus === status ? 'btn-primary' : 'btn-outline-secondary'"
+      >
+        {{ status }}
+      </button>
+      <button
+        v-if="selectedStatus"
+        @click="selectedStatus = null"
+        class="btn btn-sm btn-outline-danger"
+      >
+        Clear filter
+      </button>
+
+    </div>
+    <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+      <span class="me-2 text-muted">Sort by:</span>
+
+      <button
+        class="btn btn-sm"
+        :class="sortKey === 'created_at' && sortOrder === 'desc' ? 'btn-primary' : 'btn-outline-secondary'"
+        @click="setSort('created_at', 'desc')"
+      >
+        Created (newest first)
+      </button>
+
+      <button
+        class="btn btn-sm"
+        :class="sortKey === 'created_at' && sortOrder === 'asc' ? 'btn-primary' : 'btn-outline-secondary'"
+        @click="setSort('created_at', 'asc')"
+      >
+        Created (oldest first)
+      </button>
+
+      <button
+        class="btn btn-sm"
+        :class="sortKey === 'completed_at' && sortOrder === 'desc' ? 'btn-primary' : 'btn-outline-secondary'"
+        @click="setSort('completed_at', 'desc')"
+      >
+        Completed (newest first)
+      </button>
+
+      <button
+        class="btn btn-sm"
+        :class="sortKey === 'completed_at' && sortOrder === 'asc' ? 'btn-primary' : 'btn-outline-secondary'"
+        @click="setSort('completed_at', 'asc')"
+      >
+        Completed (oldest first)
+      </button>
+
+      <button
+        v-if="sortKey !== 'created_at' || sortOrder !== 'desc'"
+        @click="setSort('created_at', 'desc')"
+        class="btn btn-sm btn-outline-danger"
+      >
+        Reset sort
+      </button>
+    </div>
+
+    <hr />
+
+    <div v-if="filteredTasks.length === 0" class="text-muted mb-3">
+      No tasks
+      <span v-if="selectedStatus">with status "{{ selectedStatus }}"</span>
+      found.
+    </div>
+
+    <div class="list-group">
+      <div
+        v-for="task in filteredTasks"
+        :key="task.id"
+        class="list-group-item d-flex justify-content-between align-items-start"
+      >
+        <div class="task-text">
+          <h5 class="mb-1">{{ task.title }}</h5>
+          <p class="mb-1">{{ task.description || 'No description' }}</p>
+          <p class="mb-1">Status: <strong>{{ task.status }}</strong></p>
+
+          <small>
+            Created at: <strong>{{ formatDate(task.created_at) }}</strong>
+            Updated at: <strong>{{ formatDate(task.updated_at) }}</strong>
+            Completed at: <strong>{{ formatDate(task.completed_at) }}</strong>
+          </small>
+        </div>
+
+        <div class="task-buttons d-flex flex-column justify-content-between ms-3" style="height: 100px; align-items: end;">
+          <div>
+            <button
+              class="btn btn-sm btn-outline-primary me-1 btn-hover-success"
+              @click="loadUpdateTaskForm(task.id)"
+            >
+              ✏️
+            </button>
+
+            <button
+              class="btn btn-sm btn-outline-danger btn-hover-danger"
+              @click="deleteTask(task.id)"
+            >
+              🗑️
+            </button>
+
+          </div>
+
+          <div>
+            <button
+              class="btn btn-sm btn-outline-primary me-1 btn-hover-info"
+              @click="updateTaskStatus(task.id, 'todo')"
+            >
+              📝
+            </button>
+
+            <button
+              class="btn btn-sm btn-outline-primary btn-hover-warning"
+              @click="updateTaskStatus(task.id, 'in progress')"
+            >
+              ⏳
+            </button>
+
+            <button
+              class="btn btn-sm btn-outline-primary btn-hover-success"
+              @click="updateTaskStatus(task.id, 'done')"
+            >
+              ✅
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-sm btn-success mt-3" @click="loadCreateTaskForm">
+      Add task
+    </button>
+
   </div>
 </div>
