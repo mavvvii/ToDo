@@ -45,7 +45,7 @@ urlpatterns: URLResolver = [
         name="user-register-v1",
     ),
     path(
-        "v1/",
+        "v1/users/",
         include(user_profile_router_v1.urls),
     ),
 ]
