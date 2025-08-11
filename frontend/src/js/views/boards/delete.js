@@ -1,5 +1,6 @@
 import { createApp } from 'https://unpkg.com/petite-vue?module';
 import { getBoards, deleteBoard } from '../../api/boards.js';
+import { loadBoardsToNavbar } from './list.js';
 
 export function mountDeleteBoard() {
   const app = {
@@ -20,9 +21,12 @@ export function mountDeleteBoard() {
     },
 
     closeDeleteView() {
-      const container = document.getElementById('content-area');
-      if (container) {
-        container.innerHTML = '';
+      const view = document.getElementById('board-delete');
+      if (view) {
+        view.classList.add('fade-out');
+        view.addEventListener('animationend', () => {
+          view.innerHTML = '';
+        }, { once: true });
       }
     },
 
@@ -34,21 +38,29 @@ export function mountDeleteBoard() {
 
     closeModal() {
       this.showModal = false;
+      this.closeDeleteView();
     },
 
     async deleteBoardAction() {
       try {
         this.errorMessage = '';
+
         if (!this.selectedBoardID) {
           this.openModal('Error', 'You have to select board!');
           return;
         }
+
+        await this.fetchBoards();
         await deleteBoard(this.selectedBoardID);
-        this.openModal('Success', 'Board has been created!');
-        this.fetchBoards();
+
+        this.openModal('Success', `Board ${this.boards.find(board => board.id === this.selectedBoardID)?.title} has been deleted!`);
+
+        await loadBoardsToNavbar();
+
         this.selectedBoardID = '';
+
       } catch (err) {
-        this.openModal('Error', 'Unknown error');
+        this.openModal('Error', err.message || 'Unknown error');
       }
     },
   };
