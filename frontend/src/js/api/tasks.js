@@ -127,5 +127,9 @@ export async function deleteTask(board_id, task_id, isRetry = false) {
         throw new Error(errorData.detail || 'Error during delete task!');
     }
 
+    if (response.status === 204) {
+      return;
+    }
+
     return await response.json();
 }
